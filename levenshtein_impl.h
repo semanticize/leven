@@ -1,24 +1,24 @@
 /*
  * Levenshtein distance using the classic DP algorithm.
+ * Copyright 2013 Lars Buitinck.
+ * All rights reserved. See the file LICENSE for licensing information.
  */
 
-#include <errno.h>
-#include <limits.h>
-#include <stdlib.h>
+#ifndef levenshtein_impl_h
+#define levenshtein_impl_h
 
-typedef char Char;
+#include <algorithm>
+#include <cerrno>
+#include <climits>
+#include <vector>
 
-static int min2(int a, int b)
+int min(int a, int b, int c)
 {
-    return a < b ? a : b;
+    return std::min(a, std::min(b, c));
 }
 
-static int min3(int a, int b, int c)
-{
-    return min2(a, min2(b, c));
-}
-
-int levenshtein(Char const *a, size_t m, Char const *b, size_t n)
+template <typename Char>
+inline int levenshtein(Char const *a, size_t m, Char const *b, size_t n)
 {
     // Swap a and b if necessary to ensure m < n.
     if (m > n) {
@@ -58,12 +58,9 @@ int levenshtein(Char const *a, size_t m, Char const *b, size_t n)
         return -1;
     }
 
-    int *tab = malloc((m + 1) * 2 * sizeof(int));
-    if (!tab) {
-        return -1;
-    }
+    std::vector<int> tab((m + 1) * 2);
 
-    int *cur = tab, *prev = tab + m + 1;
+    int *cur = tab.data(), *prev = tab.data() + m + 1;
 
     for (size_t i = 0; i <= m; i++) {
         cur[i] = i;
@@ -80,12 +77,12 @@ int levenshtein(Char const *a, size_t m, Char const *b, size_t n)
                 cur[i] = prev[i - 1];
             }
             else {
-                cur[i] = min3(cur[i - 1], prev[i], prev[i - 1]) + 1;
+                cur[i] = min(cur[i - 1], prev[i], prev[i - 1]) + 1;
             }
         }
     }
 
-    int r = cur[m];
-    free(tab);
-    return r;
+    return cur[m];
 }
+
+#endif  // levenshtein_impl_h
