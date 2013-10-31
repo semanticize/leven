@@ -8,19 +8,19 @@
 #define levenshtein_impl_h
 
 #include <algorithm>
-#include <cerrno>
 #include <climits>
+#include <stdexcept>
 #include <vector>
 
-int min(int a, int b, int c)
+static unsigned min(unsigned a, unsigned b, unsigned c)
 {
     return std::min(a, std::min(b, c));
 }
 
 template <typename Char>
-inline int levenshtein(Char const *a, size_t m, Char const *b, size_t n)
+static unsigned levenshtein(Char const *a, size_t m, Char const *b, size_t n)
 {
-    // Swap a and b if necessary to ensure m < n.
+    // Swap a and b if necessary to ensure m <= n.
     if (m > n) {
         Char const *p;
         size_t t;
@@ -45,6 +45,11 @@ inline int levenshtein(Char const *a, size_t m, Char const *b, size_t n)
         m--, n--;
     }
 
+    // To save memory, we use unsigned as the type in the DP table.
+    if (m > UINT_MAX || n > UINT_MAX) {
+        throw std::length_error("string too long in Levenshtein distance.");
+    }
+
     if (m == 0) {
         return n;
     }
@@ -52,21 +57,15 @@ inline int levenshtein(Char const *a, size_t m, Char const *b, size_t n)
         return m;
     }
 
-    // To save space in the DP table, we use int as the return type.
-    if (m > INT_MAX || n > INT_MAX) {
-        errno = EDOM;
-        return -1;
-    }
+    std::vector<unsigned> tab((m + 1) * 2);
 
-    std::vector<int> tab((m + 1) * 2);
-
-    int *cur = tab.data(), *prev = tab.data() + m + 1;
+    unsigned *cur = tab.data(), *prev = tab.data() + m + 1;
 
     for (size_t i = 0; i <= m; i++) {
         cur[i] = i;
     }
     for (size_t j = 1; j <= n; j++) {
-        int *t = cur;
+        unsigned *t = cur;
         cur = prev;
         prev = t;
 
