@@ -22,16 +22,8 @@ static unsigned levenshtein(Char const *a, size_t m, Char const *b, size_t n)
 {
     // Swap a and b if necessary to ensure m <= n.
     if (m > n) {
-        Char const *p;
-        size_t t;
-
-        p = a;
-        a = b;
-        b = p;
-
-        t = m;
-        m = n;
-        n = t;
+        std::swap(a, b);
+        std::swap(m, n);
     }
 
     // Skip common prefix.
@@ -58,16 +50,13 @@ static unsigned levenshtein(Char const *a, size_t m, Char const *b, size_t n)
     }
 
     std::vector<unsigned> tab((m + 1) * 2);
-
     unsigned *cur = tab.data(), *prev = tab.data() + m + 1;
 
     for (size_t i = 0; i <= m; i++) {
         cur[i] = i;
     }
     for (size_t j = 1; j <= n; j++) {
-        unsigned *t = cur;
-        cur = prev;
-        prev = t;
+        std::swap(cur, prev);
 
         cur[0] = j;
 
