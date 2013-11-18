@@ -24,6 +24,22 @@ cdef extern from "levenshtein_types.h":
                                const Py_UNICODE *, size_t) except +
 
 
-def levenshtein_unicode(a, b):
-    return levenshtein_Py_UNICODE(PyUnicode_AS_UNICODE(a), len(a),
-                                  PyUnicode_AS_UNICODE(b), len(b))
+def levenshtein(a, b):
+    """Returns the Levenshtein (edit) distance between a and b.
+
+    When a and b are both byte strings (type bytes), the distance is computed
+    bytewise. When a and b are both Unicode strings (type unicode in Python 2,
+    str in Python 3), the distance is computed codepoint-wise.
+
+    Other combinations of types will cause a TypeError to be raised.
+
+    When passing Unicode strings, make sure they use the same normalization.
+    """
+    if isinstance(a, bytes) and isinstance(b, bytes):
+        return levenshtein_char(a, len(a), b, len(b))
+    if isinstance(a, unicode) and isinstance(b, unicode):
+        return levenshtein_Py_UNICODE(PyUnicode_AS_UNICODE(a), len(a),
+                                      PyUnicode_AS_UNICODE(b), len(b))
+
+    raise TypeError("Type mismatch: expected (bytes, bytes) or ({0}, {0}),"
+                    " got ({1}, {2})".format(unicode, type(a), type(b)))
