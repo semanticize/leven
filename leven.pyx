@@ -38,6 +38,11 @@ def levenshtein(a, b, normalize=False):
 
     The normalize parameter can be used to normalize the distance by the length
     of the longest input.
+
+    Example
+    -------
+    >>> levenshtein("Python", "Schmython")
+    4
     """
     cdef int d
     cdef size_t m = len(a), n = len(b)
@@ -51,4 +56,7 @@ def levenshtein(a, b, normalize=False):
         raise TypeError("Type mismatch: expected (bytes, bytes) or ({0}, {0}),"
                         " got ({1}, {2})".format(unicode, type(a), type(b)))
 
-    return <double>(d) / <double>(max(m, n, 1)) if normalize else d
+    if normalize:
+        return <double>(d) / <double>(max(m, n, 1))
+    else:
+        return d

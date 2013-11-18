@@ -6,6 +6,13 @@ Written by Lars Buitinck, Netherlands eScience Center.
 
 Performs distance computations on either byte strings or Unicode codepoints.
 
+Usage
+-----
+
+    >>> from leven import levenshtein
+    >>> levenshtein("hello, world!", "goodbye, cruel world!")
+    13
+
 About the implementation
 ------------------------
 
