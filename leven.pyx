@@ -19,8 +19,9 @@ from cpython cimport PyUnicode_AS_UNICODE, PyUnicode_GET_SIZE
 
 
 cdef extern from "levenshtein_types.h":
-    int levenshtein_char(const char *, size_t, const char *, size_t) except +
-    int levenshtein_Py_UNICODE(const Py_UNICODE *, size_t,
+    unsigned levenshtein_char(const char *, size_t,
+                              const char *, size_t) except +
+    unsigned levenshtein_Py_UNICODE(const Py_UNICODE *, size_t,
                                const Py_UNICODE *, size_t) except +
 
 
@@ -44,7 +45,7 @@ def levenshtein(a, b, normalize=False):
     >>> levenshtein("Python", "Schmython")
     4
     """
-    cdef int d
+    cdef unsigned d
     cdef size_t m = len(a), n = len(b)
 
     if isinstance(a, bytes) and isinstance(b, bytes):
@@ -57,6 +58,6 @@ def levenshtein(a, b, normalize=False):
                         " got ({1}, {2})".format(unicode, type(a), type(b)))
 
     if normalize:
-        return <double>(d) / <double>(max(m, n, 1))
+        return <double>(d) / <double>(max(m, n, 1U))
     else:
         return d
