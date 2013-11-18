@@ -6,6 +6,22 @@ Written by Lars Buitinck, Netherlands eScience Center.
 
 Performs distance computations on either byte strings or Unicode codepoints.
 
+Installation
+------------
+
+Make sure you have Cython and a C++ compiler installed::
+
+    pip install cython
+
+Installing a C++ compiler is so platform-dependent that I won't show
+instructions. Consult your package manager.
+
+Then::
+
+    python setup.py install
+
+To run the tests, but not to actually use leven, you need six and Nose.
+
 Usage
 -----
 
