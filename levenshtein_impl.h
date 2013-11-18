@@ -38,7 +38,7 @@ static unsigned levenshtein(Char const *a, size_t m, Char const *b, size_t n)
     }
 
     // Skip common prefix.
-    while (*a == *b) {
+    while (m > 0 && n > 0 && *a == *b) {
         a++, b++;
         m--, n--;
     }

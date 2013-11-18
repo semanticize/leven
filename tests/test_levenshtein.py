@@ -14,6 +14,9 @@ def test_distance():
     assert_equal(levenshtein(S1, S2), 3)
     assert_equal(levenshtein(U1, U2), 3)
 
+    for x in (S1, S2, U1, U2):
+        assert_equal(levenshtein(x, x), 0)
+
 
 def test_types():
     assert_raises(TypeError, levenshtein, S1, U2)
