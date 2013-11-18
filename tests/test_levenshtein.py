@@ -1,3 +1,5 @@
+from __future__ import division
+
 from nose.tools import assert_equal, assert_raises
 
 from leven import levenshtein
@@ -16,6 +18,11 @@ def test_distance():
 
     for x in (S1, S2, U1, U2):
         assert_equal(levenshtein(x, x), 0)
+
+
+def test_normalize():
+    assert_equal(levenshtein("", "", normalize=True), 0)
+    assert_equal(levenshtein(S1, S2, normalize=True), 3 / 7)
 
 
 def test_types():

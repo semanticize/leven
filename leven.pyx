@@ -24,7 +24,7 @@ cdef extern from "levenshtein_types.h":
                                const Py_UNICODE *, size_t) except +
 
 
-def levenshtein(a, b):
+def levenshtein(a, b, normalize=False):
     """Returns the Levenshtein (edit) distance between a and b.
 
     When a and b are both byte strings (type bytes), the distance is computed
@@ -33,13 +33,22 @@ def levenshtein(a, b):
 
     Other combinations of types will cause a TypeError to be raised.
 
-    When passing Unicode strings, make sure they use the same normalization.
-    """
-    if isinstance(a, bytes) and isinstance(b, bytes):
-        return levenshtein_char(a, len(a), b, len(b))
-    if isinstance(a, unicode) and isinstance(b, unicode):
-        return levenshtein_Py_UNICODE(PyUnicode_AS_UNICODE(a), len(a),
-                                      PyUnicode_AS_UNICODE(b), len(b))
+    When passing Unicode strings, make sure they use the same normalized form
+    (use the function unicodedata.normalize in the standard library).
 
-    raise TypeError("Type mismatch: expected (bytes, bytes) or ({0}, {0}),"
-                    " got ({1}, {2})".format(unicode, type(a), type(b)))
+    The normalize parameter can be used to normalize the distance by the length
+    of the longest input.
+    """
+    cdef int d
+    cdef size_t m = len(a), n = len(b)
+
+    if isinstance(a, bytes) and isinstance(b, bytes):
+        d = levenshtein_char(a, m, b, n)
+    elif isinstance(a, unicode) and isinstance(b, unicode):
+        d = levenshtein_Py_UNICODE(PyUnicode_AS_UNICODE(a), m,
+                                   PyUnicode_AS_UNICODE(b), n)
+    else:
+        raise TypeError("Type mismatch: expected (bytes, bytes) or ({0}, {0}),"
+                        " got ({1}, {2})".format(unicode, type(a), type(b)))
+
+    return <double>(d) / <double>(max(m, n, 1)) if normalize else d
