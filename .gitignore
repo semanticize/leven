@@ -1,9 +1,6 @@
 # Editor temporaries
 *.sw[op]
 
-# Cython-generated
-*.cpp
-
 *.py[cod]
 
 # C extensions
