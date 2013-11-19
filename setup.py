@@ -3,7 +3,7 @@ from Cython.Build import cythonize
 
 setup(
     name='leven',
-    version='1.0',
+    version='1.0.1',
     description='Levenshtein edit distance library',
     maintainer='Lars Buitinck',
     maintainer_email='l.j.buitinck@esciencecenter.nl',

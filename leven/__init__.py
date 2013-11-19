@@ -1,3 +1,3 @@
-from _levenshtein import levenshtein
+from ._levenshtein import levenshtein
 
-__version__ = '1.0'
+__version__ = '1.0.1'
