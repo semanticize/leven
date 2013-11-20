@@ -13,4 +13,5 @@ setup(
     ],
     install_requires=["six", "nose"],
     url='https://github.com/semanticize/leven',
+    test_suite='nose.collector'
 )
