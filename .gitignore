@@ -1,5 +1,6 @@
 # Editor temporaries
 *.sw[op]
+*~
 
 *.py[cod]
 
