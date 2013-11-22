@@ -2,7 +2,8 @@ Leven
 =====
 
 Levenshtein edit distance library for Python, Apache-licensed.
-Written by Lars Buitinck, Netherlands eScience Center.
+Written by Lars Buitinck, Netherlands eScience Center, with contributions
+from Isaac Sijaranamual, University of Amsterdam.
 
 Performs distance computations on either byte strings or Unicode codepoints.
 
